@@ -1,16 +1,20 @@
-## Hi there 👋
+# 👋 Hi, I'm Alex (aka aBinghamByte)
 
-<!--
-**abinghambyte/abinghambyte** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+💻 I'm exploring software development, starting with Python & C++  
+🌱 Currently brushing up on programming fundamentals  
+⚙️ Interested in automation, problem-solving, and learning employable skills
+🧠 Always building from previous experience to take on bigger projects
+📫 Reach me at [https://www.linkedin.com/in/boyd-bingham-85bb2b160?trk=people-guest_people_search-card)]
+ 
+---
 
-Here are some ideas to get you started:
+### 🧩 Current Goals
+- Post small practice projects (Python scripts, C++ exercises)
+- Learn Git branching & collaboration
+- Build a portfolio of real-world automations
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+---
+
+### 🧠 Fun fact
+I love turning everyday problems into code challenges.
+Im also very eager to learn and work with others!
