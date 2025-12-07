@@ -1,10 +1,14 @@
 # 👋 Hi, I'm Alex (aka aBinghamByte)
 
-💻 I'm exploring software development, starting with Python & C++  
-🌱 Currently brushing up on programming fundamentals  
+💻 I'm exploring software development, starting with Python  
+
+🌱 Currently brushing up on programming fundamentals
+  
 ⚙️ Interested in automation, problem-solving, and learning employable skills
+
 🧠 Always building from previous experience to take on bigger projects
-📫 Reach me at [https://www.linkedin.com/in/boyd-bingham-85bb2b160?trk=people-guest_people_search-card)]
+
+📫 Reach https://www.linkedin.com/in/alex-bingham-85bb2b160?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app 
  
 ---
 
