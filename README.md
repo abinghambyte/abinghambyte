@@ -13,7 +13,7 @@
 ---
 
 ### 🧩 Current Goals
-- Post small practice projects (Python scripts, C++ exercises)
+- Post small practice projects 
 - Learn Git branching & collaboration
 - Build a portfolio of real-world automations
 
