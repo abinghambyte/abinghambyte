@@ -13,9 +13,13 @@ produce a false "you're clear."**
 - [x] Technical architecture, IVR-script model, safety logic ([ARCHITECTURE.md](ARCHITECTURE.md))
 - [ ] Decide entity structure (PBC vs nonprofit) — needs a founder/legal conversation
 - [ ] Pick and secure the final product name + domain
-- [ ] Line up a first pilot partner (a friendly court / county / reentry org)
+- [x] Identify a first pilot target — **Larimer County, CO (CJA)**; runs both
+      Sentry and color lines. See [PILOT-LARIMER.md](PILOT-LARIMER.md)
+- [ ] Reach out to Larimer CJA — *after* the Phase 1 demo exists (don't pitch
+      vaporware)
 
-**Exit:** shared understanding + a named first partner to design against.
+**Exit:** shared understanding + a named first partner to design against
+(**Larimer County CJA** — [PILOT-LARIMER.md](PILOT-LARIMER.md)).
 
 ## Phase 1 — MVP core loop (simulated)  ·  _weeks 1–3_
 
