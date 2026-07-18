@@ -56,6 +56,12 @@ number is both the renewal argument and the core asset for a SAMHSA/BJA grant.
 
 ---
 
+## Materials
+
+- **[LEAVE-BEHIND-CJA.md](LEAVE-BEHIND-CJA.md)** — one-page discovery + positioning
+  brief to hand the CJA director: their pains in their language, our answers, the
+  free-pilot offer, and the discovery questions.
+
 ## Outreach draft (one page)
 
 > Fill in the bracketed fields. Keep it this short.
