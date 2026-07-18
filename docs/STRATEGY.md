@@ -1,23 +1,64 @@
 # Strategy & Path Forward
 
-This document answers the question: **taking "open source" out of it, what's the
-best path forward?**
+**Goal (decided): a sustainable mission venture** — real impact *and* enough
+revenue to pay a small team and last. Funded by institutional contracts + reentry
+grants, free or sponsored for individuals. Not a get-rich play (serving a
+low-income population caps user extraction), and not a grant-dependent charity
+either — a durable, mission-aligned business.
 
 Short version: **the code is the easy part.** Reliability, liability, and
 reaching the users are the real problems, and all three are solved by the same
 move — **partner *with* the institutions that supervise these clients rather than
-routing around them.**
+routing around them.** And the product wins not by out-answering a yes/no call,
+but by **being the companion for the whole supervision period.**
 
 ---
 
-## 1. Why "open source" was a distraction
+## 1. Open core — the model that makes money *with* open source
 
-Open source is a *tactic* (trust, and letting security-conscious institutions
-self-host), not a business or a mission. Leading with it would have optimized the
-wrong axis. We keep the codebase **self-hostable** because a county IT department
-or a public defender's office may require running it in their own environment —
-that's a **sales enabler**. But whether the license is OSI-approved open source
-is a downstream decision, not the strategy.
+"If it's open source and self-hostable, I can never make money" is a myth.
+GitLab, Sentry, Supabase, PostHog, and HashiCorp are all open source and all make
+real money. The model is **open core**: open the engine, charge for *operating*
+it and for the hard parts around it.
+
+Why self-hosting doesn't kill revenue *here* specifically:
+
+1. **The paying customers are institutions, and they don't want to run this.** A
+   county or court will not staff a safety-critical telephony system, maintain
+   hundreds of IVR scripts, wire up transcription, and be on-call when a phone
+   menu changes at 2 a.m. They will pay us to run it. Self-hostability is a
+   **procurement/security checkbox**, not something most will actually use.
+2. **The individuals who need it can't self-host anyway** — so it's irrelevant to
+   them.
+
+**The moat was never the code.** It is:
+
+- The **maintained library of facility IVR scripts** — hundreds of phone lines
+  kept working as their menus silently change. Compounding operational labor,
+  painful to fork; can remain the *paid/proprietary* layer even with an open engine.
+- **Reliability track record and trust** with agencies.
+- **Institutional contracts and relationships.**
+- **Outcomes data** that wins grants and renewals.
+
+**So: open the engine** (earns trust, lets a county's security team audit it,
+invites contribution); **keep the hosted operation + the script catalog + the
+caseload dashboard as the paid product.** That is the open-core line.
+
+## 1a. Differentiation — a companion, not a clone
+
+You cannot differentiate the core answer ("do I test today?") — it's a yes/no,
+and every competitor gives it. So we expand the *job*. A person on supervision
+juggles a web of obligations where any miss can mean jail: the daily test call,
+PO check-ins, court dates, required classes, community-service hours, fines/fees,
+curfew. Nobody helps them hold all of it.
+
+**Clearline is the compliance companion for the whole supervision period.** The
+daily-call automation is the anchor/wedge; retention comes from everything around
+it — the **proof locker** (court-showable record, which hotline2u utterly lacks),
+the compliance calendar, testing-site logistics, fee reminders, self-report help,
+and the **case-manager dashboard** that institutions actually buy. Delivered
+**SMS-first for everyone**, with a progressive-web-app layer on top — never
+requiring a smartphone or data plan.
 
 ## 2. The three real problems
 
@@ -68,11 +109,14 @@ PBC is the more flexible default.
 
 ## 5. Revenue model (in priority order)
 
-1. **Institutional / government contracts (primary).**
+1. **Institutional / government contracts (primary), sold as hosted open-core.**
    Counties, drug courts, reentry organizations, treatment centers, and public
-   defender offices pay a **flat program fee or per-seat license** and distribute
-   the service to their clients for free. One sale covers many users, churn is
-   low, incentives are aligned, and the buyer has an actual budget.
+   defender offices pay a **flat program fee or per-seat license** for the hosted
+   service (we operate it, maintain the scripts, staff on-call) plus the
+   **case-manager dashboard**, and distribute it to their clients for free. One
+   sale covers many users, churn is low, incentives are aligned, the buyer has an
+   actual budget — and self-hostability is the checkbox that clears procurement,
+   not a revenue leak.
 
 2. **Grants (primary, especially early).**
    Reentry and recidivism reduction is a heavily funded space. Grants fund the

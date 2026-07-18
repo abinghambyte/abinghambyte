@@ -32,6 +32,8 @@ line**, using the simulator telephony adapter.
 - [ ] `worker`: scheduler → CheckJob → interpret → NotifyJob
 - [ ] `notify`: interface + a console/log adapter; escalation state machine
 - [ ] Immutable AuditRecord persistence
+- [ ] `ProofRecord` written for each confirmed event (proof-locker foundation —
+      nearly free given the audit log)
 - [ ] CI running the full loop against the simulator
 
 **Exit:** `pnpm demo` runs a full day for a fake facility + users, produces
@@ -46,6 +48,8 @@ CLEAR** in the test suite.
 - [ ] Timezone-correct per-facility scheduling; shared-call de-dup for color lines
 - [ ] Operator console v0: review low-confidence readings, repair scripts,
       facility health dashboard
+- [ ] **Proof locker v0** — client PWA screen + downloadable `ProofExport` PDF
+      (the first companion feature; the anchor's audit data made visible)
 - [ ] Security baseline: field encryption, retention timers, consent capture
 - [ ] **Legal review** of recording/auto-dialing/data handling
 
@@ -55,7 +59,12 @@ facility line, with a human operator watching every reading.
 ## Phase 3 — Pilot hardening & proof  ·  _weeks 8–14_
 
 - [ ] Redundant notify path (second SMS provider)
-- [ ] Client-facing dashboard: check-in history + downloadable compliance record
+- [ ] **Compliance calendar** — `Obligation`s beyond the test call (PO check-ins,
+      court dates, classes, community service, fee due dates) through the same
+      scheduler + escalation
+- [ ] **Case-manager dashboard** — org-scoped caseload view (the institutional
+      product surface; built alongside the first pilot partner)
+- [ ] Testing-site logistics on `MUST_TEST`; fee reminders; self-report flow
 - [ ] Multilingual templates
 - [ ] Monitoring/alerting, SLOs, on-call runbook
 - [ ] Facility health auto-detection (menu-change early warning)

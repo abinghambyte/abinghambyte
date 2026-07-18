@@ -200,15 +200,25 @@ web/mobile push.** Escalation policy per user:
 ## 9. Data model (initial)
 
 ```
-Organization    — an institutional partner (court, county, nonprofit) OR "self"
-User            — a person being notified; belongs to an Organization
-Facility        — a testing line; owns an IvrScript(version); has a timezone
-Enrollment      — links User ↔ Facility; holds per-user encrypted credentials
-                  (testingId, lastNameLetters) and assignedColor (nullable)
-CheckJob        — one attempt to read a Facility on a given day
-AuditRecord     — immutable: transcript, ClearResult, recordingUri, scriptVersion,
-                  timestamps, provider events (the court-showable proof)
-Notification    — per-user message: channel, status, ackedAt
+Organization      — an institutional partner (court, county, nonprofit) OR "self"
+User              — a person being notified; belongs to an Organization
+Facility          — a testing line; owns an IvrScript(version); has a timezone
+Enrollment        — links User ↔ Facility; holds per-user encrypted credentials
+                    (testingId, lastNameLetters) and assignedColor (nullable)
+CheckJob          — one attempt to read a Facility on a given day
+AuditRecord       — immutable: transcript, ClearResult, recordingUri, scriptVersion,
+                    timestamps, provider events (the court-showable proof)
+Notification      — per-user message: channel, status, ackedAt
+
+# Companion layer (see §13)
+Obligation        — a compliance item on the user's calendar: type (test | po_checkin
+                    | court_date | class | community_service | fee_payment | curfew),
+                    dueAt, timezone, location, status, source
+ProofRecord       — a verified compliance event (test taken, class attended, call
+                    made) linked to its AuditRecord; the unit of the proof locker
+ProofExport       — a generated, timestamped PDF of a date range for court/PO
+SupportContact    — optional person (family, sponsor) with consented read access
+CaseManager       — an Organization staff user with a scoped view of a caseload
 ```
 
 ## 10. Reliability & operations
@@ -250,3 +260,33 @@ This is PII for a **vulnerable, legally-exposed population.** Non-negotiables:
 - A **fixture library** of realistic (synthetic) IVR recordings for regression
   testing transcription + interpretation.
 - Golden rule under test: **no input ever produces a false `CLEAR`.**
+
+## 13. Companion layer
+
+The daily-call loop (§2–§8) is the **anchor**. The product's differentiation and
+retention come from the companion features built on the same spine:
+
+- **Proof locker** — `ProofRecord`s (each linked to an immutable `AuditRecord`)
+  aggregate into a `ProofExport`: a timestamped PDF a user can hand a PO or
+  lawyer at a violation hearing. This is the single most valuable feature
+  competitors lack, and it reuses the audit data we already produce.
+- **Compliance calendar** — `Obligation`s of every type (not just the test call)
+  flow through the *same* scheduler and notify/escalation machinery. A court date
+  is just another obligation with a due time and a reminder policy.
+- **Testing-site logistics** — when a `MUST_TEST` result fires, attach the
+  facility's collection-site address, hours, what-to-bring, and transit info.
+- **Fee/fine reminders**, **self-report help** (a guided "contact your PO now"
+  flow), and optional **`SupportContact`** read access (consented).
+- **Case-manager dashboard** — an org-scoped view over `User` / `Obligation` /
+  `AuditRecord` for a whole caseload. This is the institutional product surface
+  and the thing partners pay for.
+
+**Delivery:** SMS-first for every feature that can be (reminders, results,
+acknowledgements) so nothing requires a smartphone or data plan; a **progressive
+web app** layer adds the calendar, proof locker, and dashboard for users and case
+managers who can use it. The PWA is a client of the same `api` — no separate
+backend.
+
+**Sequencing:** none of this precedes a rock-solid anchor. The proof locker comes
+first (it's nearly free given the audit log), then the calendar, then the
+case-manager dashboard alongside the first institutional pilot. See the roadmap.
