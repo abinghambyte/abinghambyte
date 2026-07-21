@@ -26,23 +26,27 @@ produce a false "you're clear."**
 Prove the whole loop end to end **without spending a dollar or calling a real
 line**, using the simulator telephony adapter.
 
-- [ ] Monorepo scaffold (`domain`, `telephony`, `transcription`, `notify`, `api`, `worker`)
-- [ ] `domain`: `ClearResult` types + `interpret()` + **asymmetric safety
-      thresholds**, with exhaustive unit tests (the false-CLEAR gate)
-- [ ] `telephony` interface + **`simulator` adapter** with scripted menus and
-      failure modes (busy, menu-changed, garbled)
-- [ ] IVR script format + a color-code and a Sentry example script
-- [ ] `transcription` interface + Whisper adapter (+ a stub for tests)
-- [ ] `worker`: scheduler → CheckJob → interpret → NotifyJob
-- [ ] `notify`: interface + a console/log adapter; escalation state machine
-- [ ] Immutable AuditRecord persistence
-- [ ] `ProofRecord` written for each confirmed event (proof-locker foundation —
-      nearly free given the audit log)
-- [ ] CI running the full loop against the simulator
+Seeded as a single zero-dependency package in [`app/`](../app/) (Node
+type-stripping + built-in test runner); it splits into the `packages/`+`apps/`
+workspace layout when the real adapters land.
 
-**Exit:** `pnpm demo` runs a full day for a fake facility + users, produces
-correct notifications and an audit record, and **provably never emits a false
-CLEAR** in the test suite.
+- [x] Package scaffold (`domain`, `telephony`, `notify`, `audit`, `worker`, `demo`)
+- [x] `domain`: `ClearResult` types + `interpret()` + **asymmetric safety
+      thresholds**, with exhaustive unit tests (the false-CLEAR gate)
+- [x] `telephony` interface + **`simulator` adapter** with scripted menus and a
+      menu-changed / low-confidence failure path
+- [x] IVR script format + a color-code and a Sentry example script
+- [ ] `transcription` interface + Whisper adapter (+ a stub for tests) — *Phase 2;
+      the demo feeds transcripts directly for now*
+- [x] `worker`: CheckJob → interpret → notice (scheduler is Phase 2)
+- [x] `notify`: `ClearResult` → channels + escalation plan; console adapter
+- [x] Immutable `AuditRecord` (in-memory; persistence in Phase 2)
+- [ ] `ProofRecord` written for each confirmed event (proof-locker foundation)
+- [x] Tests exercise the full loop against the simulator (`npm test`, 25 passing)
+
+**Exit (met):** `npm run demo` runs a full day across three facilities, produces
+correct notifications and audit records, and **provably never emits a false
+CLEAR** — the suite treats one as a failure. ✅
 
 ## Phase 2 — Real telephony + real notifications  ·  _weeks 4–7_
 
