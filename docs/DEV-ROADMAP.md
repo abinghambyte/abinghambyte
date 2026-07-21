@@ -65,18 +65,25 @@ interpret + fail-safe behavior from M0 is unchanged and still tested in CI.
 ### M2 — Real telephony (the hard one)
 Replace the simulator on real outbound calls.
 
-- **Twilio adapter**: outbound call, DTMF with correct timing (wait for prompt to
-  finish), full-call recording, webhook handling
-- **Robust navigation**: re-prompts, "invalid ID, try again" loops, voicemail
-  detection, busy/no-answer, mid-call disconnects, hold music
-- **Credential-invalid detection** → alert user + operator (distinct from menu-changed)
-- **Result-segment capture** — locate the result within the recording
-- **Operator script builder/tester** — record a call, build/version the `IvrScript`,
-  dry-run it. This tooling is core operational leverage (fix once, all users benefit).
-- **Provisioning**: outbound caller ID; begin **A2P 10DLC** registration in parallel
+- [x] **Twilio adapter (static-timing first cut)** — [`twilio.ts`](../app/src/telephony/twilio.ts):
+      creates the call, polls to a terminal state, fetches the recording, maps to
+      `CallOutcome`; behind a `TwilioVoiceClient` port so it's tested with a fake
+      (no account/network). `realTwilioClient()` lazy-loads the optional `twilio` pkg.
+- [x] **TwiML compiler** — [`twiml.ts`](../app/src/telephony/twiml.ts): `IvrScript`
+      → TwiML (`<Play digits>` with per-user substitution + pauses + call recording).
+- [x] **Transcription seam** — [`transcription/`](../app/src/transcription/): interface
+      + null stub; a completed real call with no transcript resolves safely to AMBIGUOUS.
+- [ ] **Robust navigation (webhook/Gather or Media Streams)** — the static cut can't
+      *listen*, so it can't detect re-prompts, "invalid ID" loops, voicemail, or a
+      changed menu. This upgrade reacts to each prompt in real time. **The hard part.**
+- [ ] Credential-invalid detection → alert user + operator (distinct from menu-changed)
+- [ ] Result-segment capture — locate the result within the recording
+- [ ] Operator script builder/tester — record a call, build/version the `IvrScript`
+- [ ] Provisioning: outbound caller ID; begin **A2P 10DLC** registration in parallel
 
-**Exit:** the system completes and navigates a real (test) line and captures the
-result audio. **Safety gate:** every unrecognized menu state → `UNREACHABLE`.
+**Exit:** the system navigates a real (test) line and captures the result audio.
+**Safety gate:** every unrecognized menu state and every un-transcribed call →
+`UNREACHABLE`/`AMBIGUOUS` ("verify yourself"), never CLEAR.
 
 ### M3 — Real transcription & calibrated confidence
 Make the confidence number trustworthy — the safety model depends on it.

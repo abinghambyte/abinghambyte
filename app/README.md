@@ -35,13 +35,23 @@ clear*, and *every `CLEAR` met the high confidence bar*.
 
 ```
 src/
-  domain/       types.ts + interpret.ts   ← the safety-critical core (pure, tested)
-  telephony/    types.ts + simulator.ts   ← provider interface + the simulator adapter
-  notify/       plan.ts                    ← ClearResult → channels + escalation
-  audit/        types.ts                   ← the immutable, court-showable record
-  worker/       check.ts                   ← runs a facility's day across its users
-  demo/         fixtures.ts + run.ts       ← the runnable end-to-end demo
+  domain/         types.ts + interpret.ts   ← the safety-critical core (pure, tested)
+  telephony/      types.ts + simulator.ts   ← provider interface + the simulator adapter
+                  twilio.ts + twiml.ts       ← Twilio voice adapter + IvrScript→TwiML compiler
+  transcription/  types.ts + stub.ts         ← STT seam (Whisper adapter lands in M3)
+  notify/         plan.ts                    ← ClearResult → channels + escalation
+  audit/          types.ts                   ← the immutable, court-showable record
+  worker/         check.ts                   ← runs a facility's day across its users
+  demo/           fixtures.ts + run.ts       ← the runnable end-to-end demo
 ```
+
+The **Twilio adapter** implements the same `TelephonyProvider` interface as the
+simulator. Its Twilio REST calls sit behind a small `TwilioVoiceClient` port, so
+the adapter is fully unit-tested with a fake — no account, no network, no real
+calls. `realTwilioClient()` is the production implementation (lazy-loads the
+optional `twilio` package: `npm i twilio`). It's a **static-timing first cut**;
+robust real-time menu navigation (webhooks / Media Streams) is the next M2 step —
+see [`../docs/DEV-ROADMAP.md`](../docs/DEV-ROADMAP.md) M2.
 
 ## The one rule this code exists to enforce
 

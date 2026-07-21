@@ -16,6 +16,8 @@ export interface AuditRecord {
   sttConfidence: number;
   result: ClearResult;
   digitsSent: string[];
+  /** Reference to the stored audio, when a real call produced one. */
+  recordingUri?: string | null;
   /** ISO timestamp, passed in by the caller (kept out of the pure core). */
   at: string;
 }

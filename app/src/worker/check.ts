@@ -100,6 +100,7 @@ function buildOutcome(
     sttConfidence: outcome.sttConfidence,
     result,
     digitsSent: outcome.digitsSent,
+    recordingUri: outcome.recordingUri ?? null,
     at: now,
   };
   return { user, outcome, result, notice: planNotice(user, result), audit };

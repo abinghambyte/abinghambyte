@@ -29,6 +29,9 @@ export interface CallOutcome {
   transcript: string | null;
   sttConfidence: number;
   digitsSent: string[];
+  /** Reference to the captured audio (real calls); transcription fills the text. */
+  recordingUri?: string;
+  recordingDurationSec?: number;
   /** Human-readable trace of what happened on the call (for the audit log). */
   events: string[];
 }
