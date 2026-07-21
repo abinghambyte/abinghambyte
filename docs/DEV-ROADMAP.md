@@ -183,13 +183,26 @@ watching every reading, weekly metric reporting.
 | Decision | Recommendation | Why it matters |
 |---|---|---|
 | Entity: PBC vs nonprofit | **PBC** (flexible; keeps grant access) | Gates grant apps + partner comfort |
-| Telephony provider | **Twilio** first, behind the interface | Maturity; swap later for self-host |
+| Voice-IVR provider (the anchor) | **Twilio** Programmable Voice, behind the interface | Best DTMF/recording/Media-Streams DX for navigating a real IVR — the hardest part |
+| Primary notify channel | **SMS** (Twilio), voice as escalation | Works on every phone incl. flip phones; accessibility for this population |
 | STT | **Self-host Whisper**, hosted STT fallback | Cost + data control + open-core |
 | STT confidence method | keyword-spotting + multi-decode agreement | Raw logprob isn't calibrated |
 | Database | **Postgres** (+ field encryption) | Relational, mature, self-hostable |
 | User auth | **phone OTP** | Users often have no email |
 | Hosting | one cloud target + a self-host reference | Open-core needs both paths |
-| SMS 2nd provider | Telnyx or Bandwidth | Last-mile redundancy |
+| SMS 2nd provider | **Telnyx** (or Bandwidth at scale) | Last-mile redundancy |
+| WhatsApp | **opt-in secondary channel only, post-pilot** | Can't dial an IVR; lower US reach; but read-receipts help acks |
+
+**Channel strategy (why not Sinch / WhatsApp for the core):** the anchor is a
+*programmable voice* problem — place a call, send DTMF, record the result.
+WhatsApp is a messaging channel and cannot do it; Sinch can do voice but its
+strength is carrier-grade messaging, whereas Twilio's voice-IVR tooling is the
+strongest for the finicky navigation work (re-prompts, invalid-ID, voicemail). So:
+**Twilio for voice + primary SMS**, **Telnyx as the redundant SMS provider**,
+**WhatsApp as an optional user-preference channel later**. Everything sits behind
+the [`TelephonyProvider`](../app/src/telephony/types.ts) / notify abstractions, so
+swapping the *notify* layer for cost at scale never touches the voice-IVR core.
+A2P 10DLC registration is required for US SMS regardless of provider.
 
 ## Cost model to compute (before pricing a contract)
 

@@ -8,8 +8,9 @@
 _Working name — "Clearline" is provisional (the phone _line_ + being in the
 _clear_). See [naming](docs/STRATEGY.md#naming) before it sticks._
 
-**Status: Design phase.** This repository currently holds the product and
-technical design. No application code yet — see the [roadmap](docs/ROADMAP.md).
+**Status: Design + Phase 1 seed.** Product/technical design lives in `docs/`, and
+a runnable safety-critical core (on a simulated line, zero dependencies) lives in
+[`app/`](app/) — `cd app && npm run demo`. See the [roadmap](docs/ROADMAP.md).
 
 ---
 
