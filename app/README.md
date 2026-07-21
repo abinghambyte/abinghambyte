@@ -11,8 +11,9 @@ built-in test runner — **zero dependencies, nothing to install**).
 
 ```bash
 cd app
-npm run demo    # run one simulated day across three facilities
-npm test        # 25 tests, including the "no false CLEAR" invariants
+npm run demo      # run one simulated day across three facilities
+npm run demo:nav  # the IVR navigation engine handling a messy call + fail-safes
+npm test          # 60 tests, including the "no false CLEAR" invariants
 ```
 
 ## What the demo shows
@@ -40,6 +41,8 @@ src/
                   twilio.ts + twiml.ts       ← Twilio voice adapter + IvrScript→TwiML compiler
   transcription/  types.ts + stub.ts         ← STT seam
                   whisper.ts                 ← Whisper adapter + conservative confidence calibration
+  nav/            engine.ts + intent.ts      ← robust IVR navigation state machine (the hard part)
+                  simulated-session.ts       ← scriptable transport for tests/demos
   notify/         plan.ts                    ← ClearResult → channels + escalation
   audit/          types.ts                   ← the immutable, court-showable record
   worker/         check.ts                   ← runs a facility's day across its users

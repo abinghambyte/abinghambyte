@@ -73,12 +73,18 @@ Replace the simulator on real outbound calls.
       → TwiML (`<Play digits>` with per-user substitution + pauses + call recording).
 - [x] **Transcription seam** — [`transcription/`](../app/src/transcription/): interface
       + null stub; a completed real call with no transcript resolves safely to AMBIGUOUS.
-- [ ] **Robust navigation (webhook/Gather or Media Streams)** — the static cut can't
-      *listen*, so it can't detect re-prompts, "invalid ID" loops, voicemail, or a
-      changed menu. This upgrade reacts to each prompt in real time. **The hard part.**
-- [ ] Credential-invalid detection → alert user + operator (distinct from menu-changed)
-- [ ] Result-segment capture — locate the result within the recording
-- [ ] Operator script builder/tester — record a call, build/version the `IvrScript`
+- [x] **Navigation engine (the brain)** — [`nav/`](../app/src/nav/): a pure,
+      deterministic `NavFlow` state machine (perceive→decide→act) with loop/turn/
+      unknown guards that **always fails safe**. Transport-agnostic; tested against a
+      scripted `SimulatedSession`. Handles retry loops, voicemail, changed menus,
+      dead air. See [IVR-NAVIGATION.md](IVR-NAVIGATION.md). `npm run demo:nav`.
+- [x] **Credential-invalid detection** — retry-exhaustion carries a reason distinct
+      from menu-changed (so the user can be told "check your ID").
+- [ ] **Real-time transport (Gather-webhook first, Media Streams later)** — wire the
+      engine to live audio. Gather-webhook needs the M1 API server to hold per-call
+      state across webhooks. **The remaining hard part.**
+- [ ] Result-segment capture — locate the result within the full recording
+- [ ] Operator flow builder/tester — record a call, build/version the `NavFlow`
 - [ ] Provisioning: outbound caller ID; begin **A2P 10DLC** registration in parallel
 
 **Exit:** the system navigates a real (test) line and captures the result audio.
