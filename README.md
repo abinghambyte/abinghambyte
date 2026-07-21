@@ -90,7 +90,9 @@ smartphone or a data plan.
 
 - **[docs/STRATEGY.md](docs/STRATEGY.md)** — path forward, open-core model, go-to-market, risks, funding.
 - **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** — stack, IVR-script model, safety logic, companion features, data model, privacy.
-- **[docs/ROADMAP.md](docs/ROADMAP.md)** — phased delivery plan.
+- **[docs/ROADMAP.md](docs/ROADMAP.md)** — phased product/venture delivery plan.
+- **[docs/DEV-ROADMAP.md](docs/DEV-ROADMAP.md)** — engineering build order: milestones, safety gates, compliance tracks, open decisions.
+- **[docs/PILOT-LARIMER.md](docs/PILOT-LARIMER.md)** — first-pilot brief + outreach; **[docs/LEAVE-BEHIND-CJA.md](docs/LEAVE-BEHIND-CJA.md)** one-pager.
 
 ## Guiding principle
 

@@ -1,7 +1,9 @@
 # Roadmap
 
 Phased delivery. Each phase ends with something real you can show a partner or a
-grant reviewer. The guiding constraint throughout: **never ship a path that can
+grant reviewer. For the **engineering** build order — milestones, safety gates,
+compliance tracks, and open decisions — see the companion
+**[DEV-ROADMAP.md](DEV-ROADMAP.md)**. The guiding constraint throughout: **never ship a path that can
 produce a false "you're clear."**
 
 ---
