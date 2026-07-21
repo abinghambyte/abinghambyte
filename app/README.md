@@ -38,7 +38,8 @@ src/
   domain/         types.ts + interpret.ts   ← the safety-critical core (pure, tested)
   telephony/      types.ts + simulator.ts   ← provider interface + the simulator adapter
                   twilio.ts + twiml.ts       ← Twilio voice adapter + IvrScript→TwiML compiler
-  transcription/  types.ts + stub.ts         ← STT seam (Whisper adapter lands in M3)
+  transcription/  types.ts + stub.ts         ← STT seam
+                  whisper.ts                 ← Whisper adapter + conservative confidence calibration
   notify/         plan.ts                    ← ClearResult → channels + escalation
   audit/          types.ts                   ← the immutable, court-showable record
   worker/         check.ts                   ← runs a facility's day across its users

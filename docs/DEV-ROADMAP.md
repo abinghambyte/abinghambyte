@@ -88,13 +88,19 @@ Replace the simulator on real outbound calls.
 ### M3 — Real transcription & calibrated confidence
 Make the confidence number trustworthy — the safety model depends on it.
 
-- Whisper (`faster-whisper`) service behind the `transcription` interface;
-  hosted-STT adapter as fallback
-- Tune for 8kHz phone audio; keyword/grammar biasing toward clear/test phrases + colors
-- **Confidence strategy**: keyword-spotting score + multiple-decode agreement, not
-  raw model logprob alone; calibrate thresholds against a labeled fixture set
-- **Human-review queue** for low-confidence readings (feeds the operator console)
-- Regression fixtures of realistic (synthetic) recordings, incl. accents/noise
+- [x] **Whisper adapter behind an `AsrEngine` port** —
+      [`whisper.ts`](../app/src/transcription/whisper.ts): `createWhisperTranscription`
+      + `httpWhisperEngine` (reference client for a self-hosted faster-whisper HTTP
+      service); tested with a fake engine (no model/audio/network).
+- [x] **Conservative confidence calibration** — `acousticConfidence()`: weakest-word-
+      quartile gated by Whisper's own signals (no_speech, compression ratio, avg
+      logprob). Errs low by design; unit-tested incl. the noisy→AMBIGUOUS path.
+- [x] **faster-whisper JSON mapping** — `mapWhisperResponse()`, tested.
+- [ ] Tune for 8kHz phone audio; grammar-aware refinement to the decision-bearing
+      words (a precision gain — cuts unnecessary verify-noise, not a safety change)
+- [ ] Multiple-decode agreement as a second confidence signal
+- [ ] **Human-review queue** for low-confidence readings (feeds the operator console)
+- [ ] Regression fixtures of realistic (synthetic) recordings, incl. accents/noise
 
 **Exit:** interpret() runs on real transcripts with a calibrated confidence, and
 low-confidence cases route to a human. **Safety gate:** measured false-CLEAR rate

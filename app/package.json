@@ -9,7 +9,7 @@
   },
   "scripts": {
     "demo": "node --disable-warning=ExperimentalWarning --experimental-strip-types src/demo/run.ts",
-    "test": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test src/domain/interpret.test.ts src/worker/check.test.ts src/telephony/twiml.test.ts src/telephony/twilio.test.ts",
+    "test": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test src/domain/interpret.test.ts src/worker/check.test.ts src/telephony/twiml.test.ts src/telephony/twilio.test.ts src/transcription/whisper.test.ts",
     "typecheck": "tsc --noEmit"
   }
 }
