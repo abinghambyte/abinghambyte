@@ -11,7 +11,8 @@
     "demo": "node --disable-warning=ExperimentalWarning --experimental-strip-types src/demo/run.ts",
     "demo:nav": "node --disable-warning=ExperimentalWarning --experimental-strip-types src/demo/run-nav.ts",
     "demo:service": "node --disable-warning=ExperimentalWarning --experimental-strip-types src/demo/run-service.ts",
-    "test": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test src/domain/interpret.test.ts src/worker/check.test.ts src/telephony/twiml.test.ts src/telephony/twilio.test.ts src/transcription/whisper.test.ts src/nav/intent.test.ts src/nav/engine.test.ts src/crypto/field.test.ts src/schedule/scheduler.test.ts src/consent/ledger.test.ts src/service/orchestrator.test.ts",
+    "serve": "node --disable-warning=ExperimentalWarning --experimental-strip-types src/api/server.ts",
+    "test": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test src/domain/interpret.test.ts src/worker/check.test.ts src/telephony/twiml.test.ts src/telephony/twilio.test.ts src/transcription/whisper.test.ts src/nav/intent.test.ts src/nav/engine.test.ts src/nav/webhook.test.ts src/crypto/field.test.ts src/schedule/scheduler.test.ts src/consent/ledger.test.ts src/service/orchestrator.test.ts src/api/router.test.ts",
     "typecheck": "tsc --noEmit"
   }
 }

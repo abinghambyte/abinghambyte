@@ -14,7 +14,8 @@ cd app
 npm run demo          # one simulated day across three facilities
 npm run demo:nav      # the IVR navigation engine handling a messy call + fail-safes
 npm run demo:service  # a service tick: encrypted store + scheduling + consent gating
-npm test              # 77 tests, including the "no false CLEAR" invariants
+npm run serve         # HTTP API + Twilio Gather webhook (drive a call with curl)
+npm test              # 88 tests, including the "no false CLEAR" invariants
 ```
 
 ## What the demo shows
@@ -42,8 +43,10 @@ src/
                   twilio.ts + twiml.ts       ← Twilio voice adapter + IvrScript→TwiML compiler
   transcription/  types.ts + stub.ts         ← STT seam
                   whisper.ts                 ← Whisper adapter + conservative confidence calibration
-  nav/            engine.ts + intent.ts      ← robust IVR navigation state machine (the hard part)
-                  simulated-session.ts       ← scriptable transport for tests/demos
+  nav/            engine.ts + intent.ts      ← robust IVR navigation: pure step reducer (the hard part)
+                  simulated-session.ts       ← scriptable loop transport for tests/demos
+                  webhook.ts + twiml-response ← Gather-webhook transport (step-driven, live calls)
+  api/            router.ts + server.ts      ← HTTP API + Twilio voice webhook (zero-dep node:http)
   notify/         plan.ts                    ← ClearResult → channels + escalation
   audit/          types.ts                   ← the immutable, court-showable record
   crypto/         field.ts                   ← AES-256-GCM field encryption for PII at rest

@@ -61,8 +61,12 @@ Redis are the production swap-ins. `npm run demo:service`.
       + `canNotify()` (channel consent, STOP, quiet-hours with midnight wrap). Tested.
 - [x] **Service orchestrator** — [`service/`](../app/src/service/): due-check tick →
       run → persist audits → notify (consent-gated) → idempotent per local day. Tested.
+- [x] **HTTP API** — [`api/`](../app/src/api/): a pure, testable router + a zero-dep
+      node:http server. Routes: `/enroll`, `/users/:id/status`, `/users/:id/history`,
+      `/calls/start`, and the `/twilio/voice/:callSid` webhook that persists the
+      decision on completion. Runs via `npm run serve`.
 - [ ] Postgres adapter + migrations behind the Store port
-- [ ] HTTP API (Fastify) + auth; self-serve enrollment flow
+- [ ] Auth on the API; real Twilio call setup + request signature validation
 - [ ] Durable job queue (BullMQ/Redis) + retries; holiday handling; shared-call de-dup
 - [ ] Config/secrets management (KMS-backed encryption key)
 
@@ -88,9 +92,12 @@ Replace the simulator on real outbound calls.
       dead air. See [IVR-NAVIGATION.md](IVR-NAVIGATION.md). `npm run demo:nav`.
 - [x] **Credential-invalid detection** — retry-exhaustion carries a reason distinct
       from menu-changed (so the user can be told "check your ID").
-- [ ] **Real-time transport (Gather-webhook first, Media Streams later)** — wire the
-      engine to live audio. Gather-webhook needs the M1 API server to hold per-call
-      state across webhooks. **The remaining hard part.**
+- [x] **Gather-webhook transport** — [`nav/webhook.ts`](../app/src/nav/webhook.ts) +
+      [`api/`](../app/src/api/): the engine refactored to a pure step reducer
+      (`advance`) shared by the loop and the webhook; each Twilio `<Gather>` webhook
+      advances one step and returns TwiML. Smoke-tested over real HTTP (`npm run serve`).
+- [ ] **Media Streams transport** — the fidelity upgrade (own VAD + Whisper) for
+      lines where Gather's ASR/timing is inadequate. Same engine.
 - [ ] Result-segment capture — locate the result within the full recording
 - [ ] Operator flow builder/tester — record a call, build/version the `NavFlow`
 - [ ] Provisioning: outbound caller ID; begin **A2P 10DLC** registration in parallel

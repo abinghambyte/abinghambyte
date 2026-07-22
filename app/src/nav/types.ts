@@ -53,6 +53,8 @@ export interface NavFlow {
 export interface PromptObservation {
   /** ASR of the prompt (null on silence/timeout). */
   text: string | null;
+  /** Inline ASR confidence 0..1, when the transport provides one (e.g. Twilio Gather). */
+  confidence?: number;
   /** Transport-detected signals that bypass text matching. */
   event?: "voicemail" | "hold" | "silence" | "hangup";
 }

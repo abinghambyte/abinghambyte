@@ -126,6 +126,10 @@ runs them.
 
 ---
 
-**Status:** the policy engine + perception layer + simulated-session testing are
-built (`app/src/nav/`). The Gather-webhook transport is the next step and needs
-the M1 API server + persistence to hold per-call state across webhooks.
+**Status:** built and tested end to end. The policy engine is a pure step reducer
+(`nav/engine.ts` `advance`), shared by the loop driver (simulator) and the
+**Gather-webhook transport** (`nav/webhook.ts` + `api/`), which drives a live call
+one webhook at a time and persists the decision on completion — smoke-tested over
+real HTTP (`npm run serve`). The **Media Streams** transport (own VAD + Whisper)
+is the remaining fidelity upgrade for lines where Gather's ASR is inadequate; it
+reuses the same reducer.
