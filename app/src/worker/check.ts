@@ -9,6 +9,8 @@ export interface Facility {
   name: string;
   kind: FacilityKind;
   timezone: string;
+  /** Results are available after this facility-local "HH:MM" (default "00:00"). */
+  resultsAfter?: string;
   script: IvrScript;
   grammar: ResultGrammar;
 }

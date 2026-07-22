@@ -11,9 +11,10 @@ built-in test runner — **zero dependencies, nothing to install**).
 
 ```bash
 cd app
-npm run demo      # run one simulated day across three facilities
-npm run demo:nav  # the IVR navigation engine handling a messy call + fail-safes
-npm test          # 60 tests, including the "no false CLEAR" invariants
+npm run demo          # one simulated day across three facilities
+npm run demo:nav      # the IVR navigation engine handling a messy call + fail-safes
+npm run demo:service  # a service tick: encrypted store + scheduling + consent gating
+npm test              # 77 tests, including the "no false CLEAR" invariants
 ```
 
 ## What the demo shows
@@ -45,8 +46,13 @@ src/
                   simulated-session.ts       ← scriptable transport for tests/demos
   notify/         plan.ts                    ← ClearResult → channels + escalation
   audit/          types.ts                   ← the immutable, court-showable record
+  crypto/         field.ts                   ← AES-256-GCM field encryption for PII at rest
+  schedule/       scheduler.ts               ← timezone-correct, once-per-local-day due checks
+  consent/        ledger.ts                  ← TCPA consent/opt-out/quiet-hours gate
+  store/          types.ts + memory.ts       ← persistence port + in-memory (PII-encrypting) adapter
+  service/        orchestrator.ts            ← the service tick: schedule → check → persist → notify
   worker/         check.ts                   ← runs a facility's day across its users
-  demo/           fixtures.ts + run.ts       ← the runnable end-to-end demo
+  demo/           fixtures.ts + run*.ts      ← runnable end-to-end demos (loop / nav / service)
 ```
 
 The **Twilio adapter** implements the same `TelephonyProvider` interface as the

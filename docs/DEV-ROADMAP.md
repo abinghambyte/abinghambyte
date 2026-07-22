@@ -48,19 +48,27 @@ They are the reason the milestones are ordered the way they are.
 
 ### M1 — Persistence & service shape
 Turn the in-memory demo into a real service — still simulator-driven, no real calls.
+Seeded with zero-dependency, fully-tested logic behind ports; Postgres/Fastify/
+Redis are the production swap-ins. `npm run demo:service`.
 
-- Postgres schema + migrations for the [data model](ARCHITECTURE.md#9-data-model-initial)
-  (`Organization, User, Facility, Enrollment, CheckJob, AuditRecord, Notification`)
-- **Field-level encryption** for PII (testing IDs, name letters, phone numbers)
-- HTTP API (Fastify) + auth; enrollment flow **with consent capture** baked in
-- Durable job queue (BullMQ/Redis); `CheckJob` scheduler with **IANA timezones**,
-  per-facility "results available after" window, retries, idempotency, holiday
-  handling, shared-call de-dup for color lines
-- Config/secrets management
+- [x] **Store port + in-memory adapter** — [`store/`](../app/src/store/): repositories
+      for facilities, users, enrollments, audits, notifications; PII encrypted on write.
+- [x] **Field-level encryption** — [`crypto/field.ts`](../app/src/crypto/field.ts):
+      AES-256-GCM (authenticated) via Node crypto; tampered/wrong-key → throws. Tested.
+- [x] **Timezone-correct scheduler** — [`schedule/`](../app/src/schedule/): facility-
+      local day + "available after HH:MM" via Intl (DST-safe); once-per-local-day. Tested.
+- [x] **TCPA consent gate** — [`consent/`](../app/src/consent/): consent/opt-out ledger
+      + `canNotify()` (channel consent, STOP, quiet-hours with midnight wrap). Tested.
+- [x] **Service orchestrator** — [`service/`](../app/src/service/): due-check tick →
+      run → persist audits → notify (consent-gated) → idempotent per local day. Tested.
+- [ ] Postgres adapter + migrations behind the Store port
+- [ ] HTTP API (Fastify) + auth; self-serve enrollment flow
+- [ ] Durable job queue (BullMQ/Redis) + retries; holiday handling; shared-call de-dup
+- [ ] Config/secrets management (KMS-backed encryption key)
 
-**Exit:** a running service that schedules and executes simulated checks against a
-database, persists audit records, and captures consent. **Safety gate:** the
-interpret + fail-safe behavior from M0 is unchanged and still tested in CI.
+**Exit:** a running service that schedules and executes simulated checks, persists
+audit records, and gates notifications by consent. **Safety gate (met):** the
+interpret + fail-safe behavior is unchanged and still tested in CI. ✅
 
 ### M2 — Real telephony (the hard one)
 Replace the simulator on real outbound calls.
