@@ -155,11 +155,15 @@ and see system health at a glance.
 ### M6 — Client PWA + proof locker
 The first user-facing companion surface.
 
-- **Phone-number OTP login** (many users have no email)
-- Daily status view; check-in history; **`ProofExport` PDF** for court/PO
-- "I tested ✓" logging → `ProofRecord`
-- **Spanish** templates; WCAG accessibility; low-data/offline; installable
-- SMS-first parity — every core function works without the app
+- [x] **Proof locker** — [`proof/`](../app/src/proof/): a court-showable compliance
+      record built from the audit log, linked in a **tamper-evident HMAC hash chain**
+      (altering/reordering any entry breaks it), rendered as self-contained printable
+      HTML. `GET /users/:id/proof` (HTML or `?format=json`). `npm run demo:proof`.
+      Never exposes the ID digits (count only). *(PDF via headless Chromium = prod step.)*
+- [ ] **Phone-number OTP login** (many users have no email)
+- [ ] Daily status view UI; "I tested ✓" logging → `ProofRecord`
+- [ ] **Spanish** templates; WCAG accessibility; low-data/offline; installable
+- [ ] SMS-first parity — every core function works without the app
 
 **Exit:** a user can see their history and download a compliance record; nothing
 requires a smartphone.

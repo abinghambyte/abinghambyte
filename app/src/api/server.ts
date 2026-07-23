@@ -24,7 +24,16 @@ export function buildDemoApi(baseUrl: string) {
   const nav = createWebhookNavigator(sessions);
   const flowFor = (facilityId: string) => (facilityId === "fac_sentry_b" ? sentryFlow : undefined);
 
-  return createApi({ store, sessions, nav, flowFor, now: () => new Date(), baseUrl });
+  return createApi({
+    store,
+    sessions,
+    nav,
+    flowFor,
+    now: () => new Date(),
+    baseUrl,
+    serviceName: "Clearline",
+    proofSigningKey: process.env.PROOF_KEY ?? "dev-proof-signing-key",
+  });
 }
 
 function readBody(req: IncomingMessage): Promise<string> {
@@ -40,7 +49,8 @@ export function startServer(port: number, baseUrl: string) {
   const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
     const url = new URL(req.url ?? "/", baseUrl);
     const body = req.method === "POST" ? await readBody(req) : "";
-    const out = api.handle({ method: req.method ?? "GET", path: url.pathname, body } as ApiRequest);
+    const query = Object.fromEntries(url.searchParams);
+    const out = api.handle({ method: req.method ?? "GET", path: url.pathname, body, query } as ApiRequest);
     res.writeHead(out.status, { "content-type": out.contentType });
     res.end(out.body);
   });

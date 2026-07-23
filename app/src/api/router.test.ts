@@ -21,11 +21,13 @@ function makeApi() {
     flowFor: (id) => (id === "fac_sentry_b" ? sentryFlow : undefined),
     now: () => new Date("2026-07-21T23:30:00Z"),
     baseUrl: "http://svc.test",
+    serviceName: "Clearline",
+    proofSigningKey: "router-test-proof-key",
   });
   return { api, store };
 }
 
-const req = (method: string, path: string, body = ""): ApiRequest => ({ method, path, body });
+const req = (method: string, path: string, body = "", query?: Record<string, string>): ApiRequest => ({ method, path, body, query });
 const form = (o: Record<string, string>): string => Object.entries(o).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
 
 test("health check", () => {
@@ -70,6 +72,14 @@ test("full flow: enroll → start call → Twilio webhooks → status reflects t
 
   const history = JSON.parse(api.handle(req("GET", "/users/u_sam/history")).body);
   assert.equal(history.length, 1);
+
+  // Proof locker: HTML by default, JSON on request.
+  const proofHtml = api.handle(req("GET", "/users/u_sam/proof"));
+  assert.equal(proofHtml.contentType, "text/html");
+  assert.match(proofHtml.body, /Compliance Record/);
+  const proofJson = JSON.parse(api.handle(req("GET", "/users/u_sam/proof", "", { format: "json" })).body);
+  assert.equal(proofJson.integrityVerified, true);
+  assert.equal(proofJson.summary.clear, 1);
 });
 
 test("status 404 before any reading", () => {

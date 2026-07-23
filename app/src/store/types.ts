@@ -41,6 +41,8 @@ export interface Store {
   facilities(): Facility[];
   /** Enrolled users for a facility, with decrypted call vars. */
   usersForFacility(facilityId: string): EnrolledUser[];
+  /** Public user fields (never phone/PII). */
+  getUser(userId: string): { id: string; name: string } | undefined;
   userConsent(userId: string): Consent | undefined;
 
   saveAudit(a: AuditRecord): void;

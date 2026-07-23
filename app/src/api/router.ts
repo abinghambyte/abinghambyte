@@ -10,6 +10,8 @@ import { localDay } from "../schedule/scheduler.ts";
 import type { AuditRecord } from "../audit/types.ts";
 import type { Store } from "../store/types.ts";
 import type { Facility } from "../worker/check.ts";
+import { buildProof } from "../proof/build.ts";
+import { renderProofHtml } from "../proof/html.ts";
 
 export interface ApiDeps {
   store: Store;
@@ -18,12 +20,16 @@ export interface ApiDeps {
   flowFor: (facilityId: string) => NavFlow | undefined;
   now: () => Date;
   baseUrl: string;
+  serviceName: string;
+  /** Secret used to sign the proof-locker hash chain. */
+  proofSigningKey: string;
 }
 
 export interface ApiRequest {
   method: string;
   path: string;
   body: string;
+  query?: Record<string, string>;
 }
 export interface ApiResponse {
   status: number;
@@ -45,7 +51,7 @@ function parseForm(body: string): Record<string, string> {
 }
 
 export function createApi(deps: ApiDeps): { handle(req: ApiRequest): ApiResponse } {
-  const { store, sessions, nav, flowFor, now, baseUrl } = deps;
+  const { store, sessions, nav, flowFor, now, baseUrl, serviceName, proofSigningKey } = deps;
   const callCtx = new Map<string, { userId: string; facilityId: string }>();
 
   const facility = (id: string): Facility | undefined => store.facilities().find((f) => f.id === id);
@@ -147,6 +153,16 @@ export function createApi(deps: ApiDeps): { handle(req: ApiRequest): ApiResponse
     if (method === "GET" && histMatch) {
       const audits = store.auditsForUser(decodeURIComponent(histMatch[1]));
       return json(200, audits.map((a) => ({ day: a.day, status: a.result.status, at: a.at, recordingUri: a.recordingUri ?? null })));
+    }
+
+    const proofMatch = path.match(/^\/users\/([^/]+)\/proof$/);
+    if (method === "GET" && proofMatch) {
+      const userId = decodeURIComponent(proofMatch[1]);
+      const audits = store.auditsForUser(userId);
+      const user = store.getUser(userId);
+      const exp = buildProof(audits, { serviceName, userId, userName: user?.name ?? userId, generatedAt: now().toISOString() }, proofSigningKey);
+      if (req.query?.format === "json") return json(200, exp);
+      return { status: 200, contentType: "text/html", body: renderProofHtml(exp) };
     }
 
     if (method === "POST" && path === "/calls/start") {

@@ -69,6 +69,10 @@ export function createMemoryStore(enc: Encryptor): Store {
           return eu;
         });
     },
+    getUser(userId) {
+      const u = users.get(userId);
+      return u ? { id: u.id, name: u.name } : undefined;
+    },
     userConsent(userId) {
       return users.get(userId)?.consent;
     },
