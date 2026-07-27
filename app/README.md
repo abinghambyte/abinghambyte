@@ -1,0 +1,85 @@
+# Clearline — Phase 1 seed
+
+The safety-critical check-in loop, driven by a **simulated phone line** — no
+telephony, no cost, no real lines called. This is the demo you can run in front
+of a pilot partner, and the spine the real adapters plug into later.
+
+## Run it
+
+Requires **Node ≥ 22.6** (uses built-in TypeScript type-stripping and the
+built-in test runner — **zero dependencies, nothing to install**).
+
+```bash
+cd app
+npm run demo          # one simulated day across three facilities
+npm run demo:nav      # the IVR navigation engine handling a messy call + fail-safes
+npm run demo:service  # a service tick: encrypted store + scheduling + consent gating
+npm run serve         # HTTP API + Twilio Gather webhook (drive a call with curl)
+npm run demo:proof    # generate a court-showable proof-locker HTML document
+npm test              # 95 tests, including the "no false CLEAR" invariants
+```
+
+## What the demo shows
+
+One day, three facilities, driven end-to-end by the simulator:
+
+- **A color-code line** — one shared call lists the day's colors; each enrolled
+  person is resolved by their assigned color (announced → `MUST_TEST`, not
+  announced at high confidence → `CLEAR`).
+- **A Sentry line** — a personalized call per person (it sends each user's own
+  DTMF: language, ID, name letters), including one **noisy, low-confidence**
+  reading that correctly refuses to say "clear" and tells the person to verify.
+- **A color line whose menu changed** — the simulator reports `menu_mismatch`
+  and the system **fails safe** to "call the line yourself."
+
+It ends with two safety self-checks: *no one who must test was told they were
+clear*, and *every `CLEAR` met the high confidence bar*.
+
+## Layout
+
+```
+src/
+  domain/         types.ts + interpret.ts   ← the safety-critical core (pure, tested)
+  telephony/      types.ts + simulator.ts   ← provider interface + the simulator adapter
+                  twilio.ts + twiml.ts       ← Twilio voice adapter + IvrScript→TwiML compiler
+  transcription/  types.ts + stub.ts         ← STT seam
+                  whisper.ts                 ← Whisper adapter + conservative confidence calibration
+  nav/            engine.ts + intent.ts      ← robust IVR navigation: pure step reducer (the hard part)
+                  simulated-session.ts       ← scriptable loop transport for tests/demos
+                  webhook.ts + twiml-response ← Gather-webhook transport (step-driven, live calls)
+  api/            router.ts + server.ts      ← HTTP API + Twilio voice webhook (zero-dep node:http)
+  proof/          build.ts + html.ts         ← court-showable proof locker (tamper-evident hash chain)
+  notify/         plan.ts                    ← ClearResult → channels + escalation
+  audit/          types.ts                   ← the immutable, court-showable record
+  crypto/         field.ts                   ← AES-256-GCM field encryption for PII at rest
+  schedule/       scheduler.ts               ← timezone-correct, once-per-local-day due checks
+  consent/        ledger.ts                  ← TCPA consent/opt-out/quiet-hours gate
+  store/          types.ts + memory.ts       ← persistence port + in-memory (PII-encrypting) adapter
+  service/        orchestrator.ts            ← the service tick: schedule → check → persist → notify
+  worker/         check.ts                   ← runs a facility's day across its users
+  demo/           fixtures.ts + run*.ts      ← runnable end-to-end demos (loop / nav / service)
+```
+
+The **Twilio adapter** implements the same `TelephonyProvider` interface as the
+simulator. Its Twilio REST calls sit behind a small `TwilioVoiceClient` port, so
+the adapter is fully unit-tested with a fake — no account, no network, no real
+calls. `realTwilioClient()` is the production implementation (lazy-loads the
+optional `twilio` package: `npm i twilio`). It's a **static-timing first cut**;
+robust real-time menu navigation (webhooks / Media Streams) is the next M2 step —
+see [`../docs/DEV-ROADMAP.md`](../docs/DEV-ROADMAP.md) M2.
+
+## The one rule this code exists to enforce
+
+`interpret()` uses **asymmetric thresholds**: it only ever returns `CLEAR` at
+confidence ≥ 0.90 with no test signal; *any* doubt becomes `MUST_TEST` or a
+"verify yourself" state. The tests treat a single false `CLEAR` as a failure.
+See [`../docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) §5–§6.
+
+## Not yet here (by design — see [`../docs/ROADMAP.md`](../docs/ROADMAP.md))
+
+Real telephony (Twilio) + real STT (Whisper), persistence, the client PWA / proof
+locker, and the case-manager dashboard. This seed is one package; it splits into
+the `packages/` + `apps/` workspace layout when those land.
+
+> `npm run typecheck` needs `typescript` installed (`npm i -D typescript`); the
+> demo and tests run without it via Node's type-stripping.
