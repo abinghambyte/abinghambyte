@@ -58,9 +58,15 @@ number is both the renewal argument and the core asset for a SAMHSA/BJA grant.
 
 ## Materials
 
+- **[DEMO-LARIMER.md](DEMO-LARIMER.md)** — the meeting runbook: what to bring, the
+  6-minute demo flow with talking points, the live-demo commands, and pre-loaded
+  objection handling.
 - **[LEAVE-BEHIND-CJA.md](LEAVE-BEHIND-CJA.md)** — one-page discovery + positioning
   brief to hand the CJA director: their pains in their language, our answers, the
   free-pilot offer, and the discovery questions.
+- **Interactive proposal page** — https://claude.ai/artifact/8tNAQ2tJe7JoQRpWzbej7x
+  (watch a live check-in, the safety logic, the proof locker; open in the room or
+  send as the follow-up link).
 
 ## Outreach draft (one page)
 
